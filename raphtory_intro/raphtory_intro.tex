@@ -78,11 +78,12 @@
 \title{Raphytory: big-data temporal graphs}
 \titlegraphic{
 \begin{center}
-%\includegraphics[width=3cm]{scale1}%
+\includegraphics[width=3cm]{raphtory_logo}%
 \end{center}
 }
 
-\author[Richard G. Clegg] {Richard G. Clegg (r.clegg@qmul.ac.uk)} 
+\author[Raphtory Team] {Raphtory Team (ben@chorograph.com) \\
+Presenter Richard G. Clegg} 
 
 \newcommand{\mr}{\mathbb{R}} %math R%
 \newcommand{\mn}{\mathbb{N}} %math N%
@@ -136,10 +137,24 @@
 \def\oran{orange!30}
 \tikzstyle{vertex}=[circle,fill=black!25,minimum size=20pt,inner sep=0pt]
 \tikzstyle{edge} = [draw,ultra thick,-]
+
+\frame{
+\frametitle{A simple introduction to Raphtory}
+\begin{block}{What is Raphtory?}
+Raphtory allows you to get new insights into your data by viewing it as a ``temporal graph".
+\end{block}
+\pause
+\begin{block}{What is a temporal graph?}
+This is a way of looking at how relationships in your data change over time. The next slides will explain.
+\end{block}
+
+\begin{center}
+\includegraphics[width=3cm]{raphtory_logo}%
+\end{center}
+}
+
 \frame{
 \frametitle{Viewing things as a graph/network}
-
-
 
 \centering{
 \begin{tikzpicture}[remember picture,auto, thick]
@@ -251,6 +266,56 @@ The order of events is often vital. We need to know if link A--B happened before
 
 \end{tikzpicture}
 }
+}
+
+\frame{
+\frametitle{Raphtory design philosophy}
+\begin{block}{Time changes are important}
+Raphtory is designed to answer questions about time in graphs: Who has contacted John after 1st September? Which product did people buy in the week after they bought product X?
+\end{block}
+\pause
+
+\begin{block}{Graph data can be large}
+Raphtory is designed to be distributed over many computers when a graph is too large to fit within the memory of one computer.
+\end{block}
+\pause
+\begin{block}{Simple to deploy at any scale}
+Raphtory is designed to work on a single machine but to be easy to scale to work on dozens of machines in a cloud platform.
+\end{block}
+
+}
+
+\frame{
+    
+\frametitle{Example: Transaction network}
+
+This slide will be an example involving a transaction network showing tracking tainted money
+}
+
+\frame{
+\frametitle{Current use cases}
+\begin{block}{Financial networks}
+Analysing transaction networks (bitcoin) to identify fraud and ``dark markets" where illegal transactions happen. 
+\end{block}
+
+\begin{block}{Online social networks}
+Analysing user interactions (the Gab network) to identify when important users rise to fame.
+\end{block}
+
+\begin{block}{Transport networks}
+Analysing how users move through cities using public and private transport and how this can be influenced.
+\end{block}
+
+}
+
+\frame{
+    \frametitle{Other graph technologies}
+    
+}
+
+\frame{
+\frametitle{Finding out more about Raphtory}
+    
 }
 
 \end{document}
