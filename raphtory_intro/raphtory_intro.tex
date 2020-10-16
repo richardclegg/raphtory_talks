@@ -6,7 +6,6 @@
 \usepackage{caption}
 \setbeamertemplate{navigation symbols}{}
 \useinnertheme{rectangles}
-
 \usepackage{appendixnumberbeamer}
 \usepackage[ruled, vlined, longend]{algorithm2e}
 
@@ -17,8 +16,9 @@
 \usetikzlibrary{decorations.pathmorphing}
 \usetikzlibrary{shadows}
 \usetikzlibrary{svg.path}
+\usetikzlibrary{fadings,shapes.arrows,shadows,shapes.callouts}   
+\usepackage{listings}
 \usepackage[absolute,overlay]{textpos}
-
 \tikzstyle{cloudconn} = [draw=black, inner sep=0pt,
        line width=0.25mm,{Latex[length=2.5mm, width=1.5mm]}-{Latex[length=2.5mm, width=1.5mm]}]
 
@@ -45,6 +45,16 @@
 %\includegraphics[width=6cm]{poker_routes}%
 \end{center}
 }
+
+\tikzstyle{platform} = [draw=black,shade, 
+      anchor=south west,
+      align= center,
+      top color=blue!40,
+      bottom color=blue!5,
+      rounded corners=6pt,
+      blur shadow={shadow blur steps=5},
+      font = \footnotesize]
+
 
 \usepackage{tikz}
 \usetikzlibrary{fadings,shapes.arrows,shadows}
@@ -82,8 +92,9 @@
 \end{center}
 }
 
-\author[Raphtory Team] {Raphtory Team (ben@chorograph.com) \\
-Presenter Richard G. Clegg} 
+\author[Raphtory Team] {Raphtory Team \\
+Ben Steer  (ben@chorograph.com) , Felix Cuadrado, Imane Hafnaoui, Naomi Arnold \\
+Presenter: Richard G. Clegg} 
 
 \newcommand{\mr}{\mathbb{R}} %math R%
 \newcommand{\mn}{\mathbb{N}} %math N%
@@ -215,24 +226,25 @@ every edge/.style={draw, ultra thick, -{Latex[length=4mm, width=2mm]}}]
 \frame{
 \frametitle{Graphs are dynamic -- they change}
 
-\tikzstyle{selected edge} = [draw,line width=5pt,-,red!50]
-\tikzstyle{selected superpeers}=[draw,red!50,circle, line width= 5pt, burntorange, left color=\oran,text=violet,minimum width=20pt]
+\tikzstyle{normal edge} = [draw,line width=3pt,->]
+\tikzstyle{selected edge} = [draw,line width=5pt,->,red!50]
+\tikzstyle{selected superpeers}=[draw,red!50,circle, line width= 5pt, ->, burntorange, left color=\oran,text=violet,minimum width=20pt]
 \centering{
 \begin{tikzpicture}[remember picture,auto, thick]
   % Place super peers and connect them
   \foreach \place/\name in {{(0,-1)/a}, {(4,-1)/b}, {(4,2)/c}, {(0,2)/d},
            {(-4,0)/e}}
-    \node[superpeers] (\name) at \place {};
-  \path <1-4> (a) edge (b);
-  \path <1-4> (a) edge (c);
-  \path <1-4> (a) edge (d);
+    \node (\name) at \place {\includegraphics[width=1.2cm]{bitcoin}};
+  \path <1-4> (a) edge [normal edge] (b);
+  \path <1-4> (a) edge [normal edge] (c);
+  \path <1-4> (a) edge [normal edge] (d);
   \path <2> (a) edge [selected edge] (e);
-  \path <3-4> (a) edge (e);
-  \path <1-4> (b) edge (c);
-  \path <1-4> (d) edge (e);
+  \path <3-4> (a) edge [normal edge] (e);
+  \path <1-4> (b) edge [normal edge] (c);
+  \path <1-4> (d) edge[normal edge]  (e);
   \path <3> (c) edge [selected edge] (d);
-  \path <4> (c) edge (d);
-  \node <4> [selected superpeers] (f) at (-4,2) {};
+  \path <4> (c) edge [normal edge] (d);
+  \node <4>  (f) at (-4,2) {\includegraphics[width=1.2cm]{bitcoin}};
   \path <4> (e) edge [selected edge] (f);
   \path <4> (d) edge [selected edge] (f);
 
@@ -268,29 +280,48 @@ The order of events is often vital. We need to know if link A--B happened before
 }
 }
 
-\frame{
-\frametitle{Raphtory design philosophy}
-\begin{block}{Time changes are important}
-Raphtory is designed to answer questions about time in graphs: Who has contacted John after 1st September? Which product did people buy in the week after they bought product X?
-\end{block}
-\pause
-
-\begin{block}{Graph data can be large}
-Raphtory is designed to be distributed over many computers when a graph is too large to fit within the memory of one computer.
-\end{block}
-\pause
-\begin{block}{Simple to deploy at any scale}
-Raphtory is designed to work on a single machine but to be easy to scale to work on dozens of machines in a cloud platform.
-\end{block}
-
-}
 
 \frame{
-    
-\frametitle{Example: Transaction network}
+\frametitle{Example usage: tracing bad transactions}
 
-This slide will be an example involving a transaction network showing tracking tainted money
+\tikzstyle{normal edge} = [draw,line width=3pt,->]
+\tikzstyle{selected edge} = [draw,line width=5pt,->,red!50]
+\tikzstyle{selected superpeers}=[draw,red!50,circle, line width= 5pt, ->, burntorange, left color=\oran,text=violet,minimum width=20pt]
+\centering{
+\begin{tikzpicture}[remember picture,auto, thick]
+  % Place super peers and connect them
+  \foreach \place/\name in {{(0,-1)/a}, {(4,-1)/b}, {(4,2)/c}, {(0,2)/d},
+           {(-4,0)/e}, {(-4,2)/f}}
+    \node (\name) at \place {\includegraphics[width=1.2cm]{bitcoin}};
+ \node<1-5>[big comment] at (0,-3){Consider a network of transactions over time}; 
+  \path <1-5> (a) edge [normal edge] (b);
+  \path <1-5> (d) edge[normal edge]  (e);
+  \path <1-5> (a) edge [normal edge] (d);
+  \path <2-5> (c) edge [normal edge] (a);
+  \path <3-5> (b) edge [normal edge] (c);
+  \path <3-5> (a) edge [normal edge] (e);
+  \path <4-5> (c) edge [normal edge] (d);
+  \path <5> (e) edge [normal edge] (f);
+  \path <5> (d) edge [normal edge] (f);
+ \node<6>[big comment] at (0,-3){Imagine we discover a transaction is fraudulent}; 
+    \path <6-10> (a) edge [normal edge] (b);
+  \path <6-10> (d) edge[normal edge]  (e);
+  \path <6-10> (a) edge [normal edge] (d);
+   \node<7>[big comment] at (0,-3){The red transaction is fraudulent};
+  \path <7-10> (c) edge [selected edge] (a);
+     \node<8-9>[big comment] at (0,-3){Only red arrows are ``tainted"};
+  \path <8-10> (b) edge [normal edge] (c);
+  \path <8-10> (a) edge [selected edge] (e);
+  \path <9-10> (c) edge [normal edge] (d);
+  \path <10> (e) edge [selected edge] (f);
+  \path <10> (d) edge [normal edge] (f);
+     \node<10>[big comment] at (0,-3){Static graph would give different picture};
+
+\end{tikzpicture}
 }
+}
+
+
 
 \frame{
 \frametitle{Current use cases}
@@ -309,8 +340,105 @@ Analysing how users move through cities using public and private transport and h
 }
 
 \frame{
-    \frametitle{Other graph technologies}
+\frametitle{Raphtory design philosophy}
+\begin{block}{Time changes are important}
+Raphtory is designed to answer questions about time in graphs: Who has contacted John after 1st September? Which product did people buy in the week after they bought product X?
+\end{block}
+\pause
+
+\begin{block}{Graph data can be large}
+Raphtory is designed to be distributed over many computers when a graph is too large to fit within the memory of one computer.
+\end{block}
+\pause
+\begin{block}{Simple to deploy at any scale}
+Raphtory is designed to work on a single machine but to be easy to scale to work on dozens of machines in a cloud platform.
+\end{block}
+}
+
+\tikzfading[name=arrowfading, top color=transparent!0, bottom color=transparent!95]
+\tikzset{arrowfill/.style={#1,general shadow={fill=black, shadow yshift=-0.8ex, path fading=arrowfading}}}
+\tikzset{arrowstyle/.style n args={3}{draw=#2,arrowfill={#3}, single arrow,minimum height=#1, single arrow,
+single arrow head extend=.3cm,}}
+
+\NewDocumentCommand{\tikzfancyarrow}{O{2cm} O{FireBrick} O{top color=OrangeRed!20, bottom color=Red} m}{
+\tikz[baseline=-0.5ex]\node [arrowstyle={#1}{#2}{#3}] {#4};
+}
+
+
+
+\frame{
+    \frametitle{The Raphtory tool}
+\begin{tikzpicture}%[show background grid]
+\draw[white] (-5.5,-3.5) rectangle (5.5,3.5);
+\node <1-> at (-4.5,0) {\includegraphics[width=1.5cm]{tweet}};
+\node <1-> at (-0.5,-2) {\includegraphics[width=2cm]{computer}};
+\node <1-> at (-0.5,2) {\includegraphics[width=2cm]{computer}};
+\node <1-> at (2.5,2) {\includegraphics[width=2cm]{computer}};
+\node <1-> at (2.5,-2) {\includegraphics[width=2cm]{computer}};
+\node <1-> at (5.5,0) {\includegraphics[width=1.2cm]{user}};
+\node <2-> at (-2.5,0) {\tikzfancyarrow[1.5cm][DarkBlue][top color= PaleTurquoise,bottom color=DeepSkyBlue]{link data} };
+\node <2-> at (-2.5,0) {\tikzfancyarrow[1.5cm][DarkBlue][top color= PaleTurquoise,bottom color=DeepSkyBlue]{link data} };
+\node <2-> at (-2.5,-1.2) {\tikzfancyarrow[1.5cm][DarkBlue][top color= PaleTurquoise,bottom color=DeepSkyBlue]{link data} };
+\node <2-> at (-2.5,1.2) {\tikzfancyarrow[1.5cm][DarkBlue][top color= PaleTurquoise,bottom color=DeepSkyBlue]{link data} };
+\node <3> at (1,0) {\includegraphics[width=2cm]{graphfull}};
+\node <4-> at (-0.5,-2) {\includegraphics[width=1cm]{grapha}};
+\node <4-> at (-0.5,2) {\includegraphics[width=1cm]{graphb}};
+\node <4-> at (2.5,2) {\includegraphics[width=1cm]{graphc}};
+\node <4-> at (2.5,-2) {\includegraphics[width=1cm]{graphd}};
+\node <5-> at (3.7,0) {\tikzfancyarrow[2.5cm][Orchid][top color= Thistle,bottom color=Orchid,shape border rotate=180]{user query} };
+\node<6->[platform,anchor= north] at (0,2) {What does the graph look like now?};
+\node<7->[platform,anchor= north] at (0,1.) {What did the graph look like last week?};
+\node<8->[platform,anchor= north] at (0,0) {How does the graph change each month/day/second?};
+\node<9->[platform,anchor= north] at (0,-1) {What time did the graph change most?};
+\node<10->[platform,anchor= north] at (0,-2) {How did the graph change when user $u$ arrived?};
+\end{tikzpicture}
+}
+
+
+\tikzstyle{platform} = [draw=black,shade, 
+      anchor=south west,
+      align= center,
+      top color=blue!40,
+      bottom color=blue!5,
+      rounded corners=6pt,
+      blur shadow={shadow blur steps=5},
+      font = \footnotesize]
+
+\frame{
+    \frametitle{Raphtory's place among other technologies}
     
+\begin{tikzpicture}%[show background grid]
+\draw[white] (-5.5,-3.5) rectangle (5.5,3.5);
+\node <1-> at (0,4.5) {\tikzfancyarrow[1.5cm][DarkBlue][ anchor= center, top color= PaleTurquoise,bottom color=DeepSkyBlue,shape border rotate=270]{Your data}};
+\node<1>[platform,anchor= center] at (0,3) {Data with entities\\and relationships};
+
+\node <2-> at (2.5,3) {
+    \begin{tikzpicture}
+      \node [draw= none,  anchor= center, shape border rotate=305, rotate = 45]   {\tikzfancyarrow[2.5cm][DarkBlue][top color= Thistle,bottom color=Orchid]{Node data}};   
+    \end{tikzpicture}
+};
+\node<2>[platform,  anchor= center] at (4.5,4) {Interested in whole \\ 
+    graph large areas};
+
+\node <2-> at (-2.5,3) {
+    \begin{tikzpicture}
+      \node [draw=none, anchor= center, shape border rotate=45, rotate = 135]   {\tikzfancyarrow[2.5cm][DarkBlue][top color= Thistle,bottom color=Orchid]{Graph data}};   
+    \end{tikzpicture}
+};
+\node<2>[platform,  anchor= center] at (-4.5,4) {Interested in nodes\\local areas};
+\node <3-> at (2.5,0) {
+    \begin{tikzpicture}
+      \node [draw= none,  anchor= center, shape border rotate=90, rotate = 135]   {\tikzfancyarrow[2.5cm][DarkBlue][top color= Thistle,bottom color=Orchid]{Time stamp}};   
+    \end{tikzpicture}
+};
+\node <3-> at (-2.5,0) {
+    \begin{tikzpicture}
+      \node [draw=none, anchor= center, shape border rotate=270, rotate = 45]   {\tikzfancyarrow[2.5cm][DarkBlue][top color= Thistle,bottom color=Orchid]{Time stamp}};   
+    \end{tikzpicture}
+};
+\node<4> at (0,-1) {\includegraphics[width=2cm]{raphtory_logo}};
+\node<4>[platform,  anchor= center] at (0,-2) {Raphtory};
+\end{tikzpicture}
 }
 
 \frame{
